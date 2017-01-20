@@ -5,22 +5,37 @@ export function double ( x ) {
 export function doubleXTimes ( x, num ) {
   let result = x;
 
-  for ( let i = 1; i <= num; i++ ) {
+  // i++ === i = i + 1
+  // what is the difference between using let and var?
+  for ( let i = 0; i < num; i++ ) {
     // result = result * 2;
-    result = double( result );
+    result = double( result ); // internal implementation detail
   }
 
   return result;
 }
 
-export function doubleEach ( arr ) {
-  let result = arr.map( double );
+export const doubleEach = arr => arr.map( x => double( x ) );
 
-  // const result = arr.map( x => double( x ) );
-  // const result = arr.map( function ( x ) {
-  //   return double( x );
-  // });
+// export function doubleEach ( arr ) {
+//   // let result = [];
 
-  return result;
-}
+//   return arr.map( x => double( x ) );
+//   // return arr.map( function ( x ) {
+//   //   return double ( x );
+//   // });
+
+//   // arr.forEach( x => result.push( double( x ) ) );
+//   // arr.forEach( function ( x, i ) {
+//   //   // result.push( double( x ) );
+//   //   result.push( double( arr[ i ] ) );
+//   // });
+
+//   // for ( let i = 0; i < arr.length; i++ ) {
+//   //   // result.push( arr[i] * 2 );
+//   //   result.push( double( arr[i] ) );
+//   // }
+
+//   // return result;
+// }
 
