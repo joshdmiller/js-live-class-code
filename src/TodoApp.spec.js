@@ -5,7 +5,7 @@ import Todo from './Todo';
 test( 'TodoApp', t => {
   let actual, expected, app;
 
-  // app = TodoApp(); // use new if using a constructor
+  app = TodoApp(); // use new if using a constructor
 
   actual = app.isFiltered();
   expected = false;
