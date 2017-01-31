@@ -1,42 +1,40 @@
 import shortid from 'shortid';
+import State from './mixins/state';
+import compose from './compose';
 
 const TodoPrototype = {
-  complete: false,
-
   getTitle () {
-    return this.title;
+    return this.getState().title;
   },
 
   isComplete () {
-    return this.complete === true;
+    return this.getState().complete === true;
   },
 
   toggleComplete () {
-    this.complete = ! this.complete;
+    // const complete = this.getState().complete;
+    const { complete } = this.getState();
+    return this.setState({ complete: ! complete });
   },
 
   setTitle ( title ) {
-    this.title = title;
+    return this.setState({ title });
   },
 
   getId () {
-    return this.id;
+    return this.getState().id;
   },
 };
 
 export default todo => {
   if ( typeof todo !== 'object' ) {
-    return {
+    todo = {
       id: shortid.generate(),
       title: todo,
-
-      ...TodoPrototype,
+      compose: false,
     };
   }
 
-  return {
-    ...TodoPrototype,
-    ...todo,
-  };
+  return compose( State( todo ), TodoPrototype );
 };
 

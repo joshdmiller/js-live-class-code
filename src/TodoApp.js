@@ -1,50 +1,94 @@
 import Todo from './Todo';
+import compose from './compose';
+import State from './mixins/state';
+import notifyMixin from './mixins/notify';
 
-const TodoAppPrototype = {
-  isFiltered () {
-    return this.filtered === true;
-  },
-
-  toggleFilter () {
-    this.filtered = ! this.filtered;
-  },
-
-  getTodos () {
-    if ( this.isFiltered() ) {
-      return this.todos.filter( t => ! t.isComplete() );
-    }
-
-    return this.todos;
-  },
-
-  addTodo ( todo ) {
-    this.todos.push( Todo( todo ) );
-  },
-
-  rmTodo ( id ) {
-    this.todos = this.todos.filter( t => t.getId() !== id );
-  },
-
-  setTodos ( todos ) {
-    this.todos = todos;
-  },
-
-  toggleComplete ( id ) {
-    this.todos.find( t => t.getId() === id ).toggleComplete();
-  },
-
-  setTitle ( id, title ) {
-    this.todos.find( t => t.getId() === id ).setTitle( title );
-  },
+const initialState = {
+  todos: [],
+  filtered: false,
 };
 
 export default () => {
-  return {
-    todos: [],
-    filtered: false,
+  const stateMixin = State( initialState );
 
-    ...TodoAppPrototype,
+  const TodoAppPrototype = {
+    isFiltered () {
+      return this.getState().filtered === true;
+    },
+
+    toggleFilter () {
+      const { filtered } = this.getState();
+      this.setState({ filtered: ! filtered });
+    },
+
+    getTodos () {
+      const { todos } = this.getState();
+
+      if ( this.isFiltered() ) {
+        return todos.filter( t => ! t.isComplete() );
+      }
+
+      return todos;
+    },
+
+    addTodo ( todo ) {
+      const { todos } = this.getState();
+      this.setState({ todos: [ ...todos, Todo( todo ) ] });
+    },
+
+    rmTodo ( id ) {
+      const { todos } = this.getState();
+      this.setState({
+        todos: todos.filter( t => t.getId() !== id ),
+      });
+    },
+
+    setTodos ( todos ) {
+      this.setState({ todos });
+    },
+
+    toggleComplete ( id ) {
+      const { todos } = this.getState();
+      const todo = todos.find( t => t.getId() === id );
+      todo.toggleComplete();
+
+      this.setState({
+        todos: todos.map( t => {
+          if ( t.getId() === id ) {
+            return todo;
+          }
+
+          return t;
+        }),
+      });
+    },
+
+    setTitle ( id, title ) {
+      const { todos } = this.getState();
+      const todo = todos.find( t => t.getId() === id );
+      todo.setTitle( title );
+
+      this.setState({
+        todos: todos.map( t => {
+          if ( t.getId() === id ) {
+            return todo;
+          }
+
+          return t;
+        }),
+      });
+    },
+
+    setState ( newState ) {
+      stateMixin.setState.call( this, newState );
+      this.notify();
+    }
   };
-};
 
+  return compose(
+    notifyMixin,
+    stateMixin,
+    TodoAppPrototype
+  );
+};
 
