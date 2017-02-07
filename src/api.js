@@ -21,31 +21,63 @@ export default {
 
   get () {
     return new Promise( ( resolve, reject ) => {
-      // TODO: flesh me out
+      resolve( this._todos );
     });
   },
 
   create ( title ) {
     return new Promise( ( resolve, reject ) => {
-      // TODO: flesh me out
+      const todo = {
+        title,
+        complete: false,
+        id: shortid.generate(),
+      };
+
+      this._todos.push( todo );
+
+      resolve( todo );
     });
   },
 
   getOne ( id ) {
     return new Promise( ( resolve, reject ) => {
-      // TODO: flesh me out
+      const todo = this._todos.find( t => t.id === id );
+
+      if ( todo ) {
+        return resolve( todo );
+      }
+
+      return reject();
     });
   },
 
   update ( id, props ) {
     return new Promise( ( resolve, reject ) => {
-      // TODO: flesh me out
+      let todo;
+
+      this._todos = this._todos.map( t => {
+        if ( t.id !== id ) {
+          return t;
+        }
+
+        todo = {
+          ...t,
+          ...props,
+          id,
+        };
+
+        return todo;
+      });
+
+      resolve( todo );
     });
   },
 
   remove ( id ) {
     return new Promise( ( resolve, reject ) => {
-      // TODO: flesh me out
+      this._todos = this._todos.filter( t => t.id !== id );
+
+      resolve();
     });
   },
 };

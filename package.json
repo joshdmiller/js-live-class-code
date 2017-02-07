@@ -4,6 +4,8 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
+    "start:be:dev": "nodemon server.js",
+    "start:be": "node server.js",
     "start:fe:dev": "webpack-dev-server --hot --inline --content-base static",
     "test": "tape -r babel-register 'src/**/*spec.js'"
   },
@@ -18,11 +20,15 @@
   "dependencies": {
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.14.0",
+    "body-parser": "^1.16.0",
+    "cors": "^2.8.1",
+    "express": "^4.14.1",
     "shortid": "^2.2.6"
   },
   "devDependencies": {
     "babel-loader": "^6.2.10",
-    "babel-register": "^6.14.0",
+    "nodemon": "^1.11.0",
     "tape": "^4.6.0",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
