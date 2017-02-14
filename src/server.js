@@ -7,6 +7,7 @@ import db from './api';
 const app = express();
 
 app.use( bodyParser() );
+app.use( cors() );
 
 app.get( '/', ( req, res ) => {
   res.send( 'Hello there' );

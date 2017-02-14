@@ -1,18 +1,12 @@
 import TodoApp from './TodoApp';
-import Todo from './Todo';
 
 function onReady () {
   const app = TodoApp();
 
-  const todo1 = Todo( 'First Todo' );
-  const todo2 = Todo( 'Second Todo' );
-  const todo3 = Todo( 'Third Todo' );
-  todo2.toggleComplete();
-  app.setTodos([ todo1, todo2, todo3 ]);
-
   const addTodoForm = document.getElementById( 'addTodoForm' );
   const todoList = document.getElementById( 'todoList' );
   const newTodoText = document.getElementById( 'newTodoText' );
+  const toggleBtn = document.getElementById( 'toggleBtn' );
 
   addTodoForm.addEventListener( 'submit', event => {
     event.preventDefault();
@@ -22,6 +16,8 @@ function onReady () {
 
     newTodoText.value = '';
   });
+
+  toggleBtn.addEventListener( 'click', () => app.toggleFilter() );
 
   // ( state ) => ui
   const renderTheUi = ( todos ) => {
