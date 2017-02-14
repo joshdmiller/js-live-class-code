@@ -12,6 +12,7 @@
   },
   "babel": {
     "presets": [
+      "react",
       "es2015",
       "stage-0"
     ]
@@ -25,11 +26,14 @@
     "body-parser": "^1.16.0",
     "cors": "^2.8.1",
     "express": "^4.14.1",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
     "shortid": "^2.2.6",
     "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
     "babel-loader": "^6.2.10",
+    "babel-preset-react": "^6.23.0",
     "nodemon": "^1.11.0",
     "tape": "^4.6.0",
     "webpack": "^1.14.0",
