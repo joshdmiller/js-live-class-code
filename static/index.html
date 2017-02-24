@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="todoApp">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,20 +13,25 @@
       }
     </style>
   </head>
-  <body>
+  <body ng-controller="TodoController as ctrl">
     <h1>The Todo App!</h1>
 
-    <form id="addTodoForm">
+    <form ng-submit="ctrl.addTodo()">
       <label for="newTodoText">New Todo:</label>
-      <input type="text" id="newTodoText" />
+      <input type="text" ng-model="ctrl.newTodoText" />
       <button type="submit">Add Todo!</button>
     </form>
 
-    <button id="toggleBtn">Toggle Filter</button>
+    <button ng-click="ctrl.toggleFilter()">Toggle Filter</button>
 
-    <ul id="todoList">
-      <!-- todo items go here -->
-      <li>Loading...</li>
+    <ul>
+      <li
+        ng-repeat="todo in ctrl.state.todos"
+        ng-click="ctrl.toggleComplete( todo )"
+        ng-class="{ 'todo--complete': todo.isComplete() }"
+        >
+        {{todo.getTitle()}}
+      </li>
     </ul>
 
     <script src="/static/bundle.js"></script>

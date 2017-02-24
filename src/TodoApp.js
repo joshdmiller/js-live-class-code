@@ -11,7 +11,7 @@ const initialState = {
 
 const API_URI = 'http://localhost:3000';
 
-export default () => {
+export default ( $http ) => {
   const stateMixin = State( initialState );
 
   const TodoAppPrototype = {
@@ -37,16 +37,10 @@ export default () => {
     addTodo ( title ) {
       const { todos } = this.getState();
 
-      fetch( `${API_URI}/todos`, {
-        method: 'POST',
-        body: JSON.stringify({
-          title,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      $http.post( `${API_URI}/todos`, {
+        title,
       })
-      .then( res => res.json() )
+      .then( res => res.data )
       .then( todo => Todo( todo ) )
       .then( todo => this.setState({ todos: [ ...todos, todo ] }) )
       ;
@@ -54,9 +48,7 @@ export default () => {
 
     rmTodo ( id ) {
       const { todos } = this.getState();
-      fetch( `${API_URI}/todos/${id}`, {
-        method: 'DELETE',
-      })
+      $http.delete( `${API_URI}/todos/${id}` )
       .then( () => this.setState({
         todos: todos.filter( t => t.getId() !== id ),
       }))
@@ -71,16 +63,10 @@ export default () => {
       const { todos } = this.getState();
       const todo = todos.find( t => t.getId() === id );
 
-      fetch( `${API_URI}/todos/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          complete: ! todo.isComplete(),
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      $http.put( `${API_URI}/todos/${id}`, {
+        complete: ! todo.isComplete(),
       })
-      .then( res => res.json() )
+      .then( res => res.data )
       .then( todo => Todo ( todo ) )
       .then( todo => todos.map( t => {
         if ( t.getId() === id ) {
@@ -93,6 +79,7 @@ export default () => {
       ;
     },
 
+    // FIXME: update for $http
     setTitle ( id, title ) {
       const { todos } = this.getState();
       const todo = todos.find( t => t.getId() === id );
@@ -122,8 +109,8 @@ export default () => {
   );
 
   // get the existing todos
-  fetch( `${API_URI}/todos` )
-    .then( response => response.json() )
+  $http.get( `${API_URI}/todos` )
+    .then( response => response.data )
     .then( todos => todos.map( t => Todo( t ) ) )
     .then( todos => app.setTodos( todos ) )
     ;

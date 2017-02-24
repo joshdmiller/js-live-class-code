@@ -1,56 +1,42 @@
+import angular from 'angular';
+
 import TodoApp from './TodoApp';
 
-function onReady () {
-  const app = TodoApp();
+// ( state ) => ui
+// const renderTheUi = ( todos ) => {
+// };
 
-  const addTodoForm = document.getElementById( 'addTodoForm' );
-  const todoList = document.getElementById( 'todoList' );
-  const newTodoText = document.getElementById( 'newTodoText' );
-  const toggleBtn = document.getElementById( 'toggleBtn' );
+class TodoController {
+  constructor ( app ) {
+    this.app = app;
 
-  addTodoForm.addEventListener( 'submit', event => {
-    event.preventDefault();
-    const title = newTodoText.value;
+    app.subscribe( () => this.renderTheUi( app.getTodos() ) );
+    this.renderTheUi( app.getTodos() );
+  }
 
-    app.addTodo( title );
+  renderTheUi ( todos ) {
+    this.state = {
+      todos,
+    };
+  }
 
-    newTodoText.value = '';
-  });
+  addTodo () {
+    this.app.addTodo( this.newTodoText );
 
-  toggleBtn.addEventListener( 'click', () => app.toggleFilter() );
+    this.newTodoText = '';
+  }
 
-  // ( state ) => ui
-  const renderTheUi = ( todos ) => {
-    // <ul></ul>
-    todoList.textContent = '';
+  toggleFilter () {
+    this.app.toggleFilter();
+  }
 
-    todos.forEach( todo => {
-      // add it to the list
-      // create an li
-      // <li>{title}</li>
-      const newLi = document.createElement( 'li' );
-      newLi.textContent = todo.getTitle(); // vs newLi.innerHTML
-
-      if ( todo.isComplete() ) {
-        newLi.classList.add( 'todo--complete' );
-      }
-
-      newLi.addEventListener( 'click', () => {
-        app.toggleComplete( todo.getId() );
-      });
-
-      // put it in the ul
-      todoList.appendChild( newLi );
-    });
-  };
-
-  app.subscribe( () => renderTheUi( app.getTodos() ) );
-  renderTheUi( app.getTodos() );
+  toggleComplete ( todo ) {
+    this.app.toggleComplete( todo.getId() );
+  }
 }
 
-if ( document.readyState !== 'loading' ) {
-  onReady();
-} else {
-  document.addEventListener( 'DOMContentLoaded', onReady );
-}
+angular.module( 'todoApp', [] )
+  .controller( 'TodoController', TodoController )
+  .service( 'app', TodoApp ) // singletons
+;
 
