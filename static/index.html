@@ -14,20 +14,28 @@
     </style>
   </head>
   <body>
-    <h1>The Todo App!</h1>
+    <div id="app">
+      <h1>The Todo App!</h1>
 
-    <form id="addTodoForm">
-      <label for="newTodoText">New Todo:</label>
-      <input type="text" id="newTodoText" />
-      <button type="submit">Add Todo!</button>
-    </form>
+      <form v-on:submit.prevent="addTodo()">
+        <label for="newTodoText">New Todo:</label>
+        <input type="text" v-model="newTodoText" />
+        <button type="submit">Add Todo!</button>
+      </form>
 
-    <button id="toggleBtn">Toggle Filter</button>
+      <button v-on:click="toggleFilter()">Toggle Filter</button>
 
-    <ul id="todoList">
-      <!-- todo items go here -->
-      <li>Loading...</li>
-    </ul>
+      <ul>
+        <!-- todo items go here -->
+        <li
+          v-for="todo in todos"
+          v-bind:class="{ 'todo--complete': todo.isComplete() }"
+          v-on:click="toggleComplete( todo )"
+          >
+          {{ todo.getTitle() }}
+        </li>
+      </ul>
+    </div>
 
     <script src="/static/bundle.js"></script>
   </body>
